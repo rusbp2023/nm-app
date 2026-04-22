@@ -11,20 +11,37 @@ app.get('/', async (req, res) => {
     const $ = cheerio.load(data);
 
     let value = 'N/A';
+    let targetIndex = -1;
 
-    // 🔹 soronként megyünk
+    // 🔥 1. megkeressük a fejléc sorát
+    const headers = [];
+
+    $('tr').first().find('td, th').each((i, el) => {
+      headers.push($(el).text().trim());
+    });
+
+    console.log('HEADERS:', headers);
+
+    // 🔥 2. megkeressük a "mai reggeli" oszlopot
+    headers.forEach((h, i) => {
+      if (h.includes('37') || h.includes('reggel') || h.includes('ma')) {
+        targetIndex = i;
+      }
+    });
+
+    console.log('TARGET INDEX:', targetIndex);
+
+    // 🔥 3. Nagymaros sor keresése
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
-
         const name = $(cells[1]).text().trim();
 
         if (name === 'Nagymaros') {
-
-          // 🔥 PRÓBÁLJUK A "2. SZÁMOS OSZLOPOT" (ez általában a reggeli)
-          value = $(cells[2]).text().trim();
-
+          if (targetIndex !== -1) {
+            value = $(cells[targetIndex]).text().trim();
+          }
         }
       }
     });
@@ -36,11 +53,9 @@ app.get('/', async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.send('Hiba a lekérésben');
+    res.send('Hiba');
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log('Server fut a porton:', PORT);
-});
+app.listen(PORT, () => console.log('Server fut'));
