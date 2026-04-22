@@ -12,29 +12,19 @@ app.get('/', async (req, res) => {
 
     let value = 'N/A';
 
-    // 🔹 1. Fejléc kiolvasása
-    const headers = [];
-    $('tr').first().find('td, th').each((i, el) => {
-      headers.push($(el).text().trim());
-    });
-
-    // 🔹 2. Megkeressük a "ma reggel" oszlopot
-    // (ha pontosabb nevet látsz, pl. "Ma reggel vízállás", ez is működik)
-    const idx = headers.findIndex(h =>
-      h.toLowerCase().includes('reggel')
-    );
-
-    // 🔹 3. Sorok bejárása
+    // 🔹 soronként megyünk
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
+
         const name = $(cells[1]).text().trim();
 
         if (name === 'Nagymaros') {
-          if (idx !== -1) {
-            value = $(cells[idx]).text().trim();
-          }
+
+          // 🔥 PRÓBÁLJUK A "2. SZÁMOS OSZLOPOT" (ez általában a reggeli)
+          value = $(cells[2]).text().trim();
+
         }
       }
     });
