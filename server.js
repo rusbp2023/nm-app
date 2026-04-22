@@ -19,7 +19,7 @@ app.get('/', async (req, res) => {
         const name = $(cells[1]).text().trim();
 
         if (name === 'Nagymaros') {
-          value = $(cells[3]).text().trim();
+          value = $(cells[2]).text().trim();
         }
       }
     });
