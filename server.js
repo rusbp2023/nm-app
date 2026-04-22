@@ -23,7 +23,7 @@ app.get('/', async (req, res) => {
         if (name === 'Nagymaros') {
 
           // 🔥 PRÓBÁLJUK A "2. SZÁMOS OSZLOPOT" (ez általában a reggeli)
-          value = $(cells[3]).text().trim();
+          value = $(cells[2]).text().trim();
 
         }
       }
