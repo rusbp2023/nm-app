@@ -13,30 +13,28 @@ app.get('/', async (req, res) => {
     let value = 'N/A';
 
     $('tr').each((i, row) => {
-      const text = $(row).text();
+      const cells = $(row).find('td');
 
-      // 🔥 ha benne van a Nagymaros
-      if (text.includes('Nagymaros')) {
+      if (cells.length > 0) {
 
-        const cells = $(row).find('td');
+        const name = $(cells[1]).text().trim();
 
-        const values = [];
+        if (name === 'Nagymaros') {
 
-        cells.each((i, el) => {
-          const t = $(el).text().trim();
-          if (t !== '') values.push(t);
-        });
+          // 🔥 ÖSSZES CELL KIOLVASÁSA (DEBUG + BIZTOS LOGIKA)
+          const values = [];
 
-        console.log('Nagymaros parsed:', values);
+          cells.each((i, el) => {
+            values.push($(el).text().trim());
+          });
 
-        // 🔥 itt keresünk egy számot (37 környéke)
-        // általában az utolsó vagy utolsó előtti szám
-        const numbers = values.filter(v => !isNaN(v) && v !== '');
+          console.log('Nagymaros sor:', values);
 
-        console.log('Numbers:', numbers);
+          // 🔥 A VÍZÁLLÁS TÖBBNYIRE AZ 4. SZÁMOS OSZLOP
+          // (itt fogjuk belőni pontosan)
+          value = values[4]; // <-- EZ LESZ A 37 (vagy körülötte)
 
-        // 👉 EZ LESZ A MEGOLDÁS (általában az utolsó vagy utolsó előtti)
-        value = numbers[numbers.length - 1] || 'N/A';
+        }
       }
     });
 
