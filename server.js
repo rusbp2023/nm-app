@@ -27,13 +27,14 @@ app.get('/', async (req, res) => {
     res.send(`
       <h1>Nagymaros vízállás</h1>
       <h2>${value} cm</h2>
-      <p>Frissítve: ${new Date().toLocaleString()}</p>
     `);
 
   } catch (err) {
-    res.send('Hiba történt');
+    res.send('Hiba a lekérésben');
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Server fut'));
+app.listen(PORT, () => {
+  console.log('Server fut a porton:', PORT);
+});
