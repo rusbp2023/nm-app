@@ -38,10 +38,41 @@ app.get('/', async (req, res) => {
       }
     });
 
-    res.send(`
+ res.send(`
+  <html>
+    <head>
+      <title>Nagymaros vízállás</title>
+      <style>
+        body {
+          margin: 0;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          font-family: Arial, sans-serif;
+          background: #f2f6ff;
+        }
+
+        h1 {
+          font-size: 42px;
+          margin-bottom: 20px;
+        }
+
+        h2 {
+          font-size: 80px;
+          margin: 0;
+          color: #0066cc;
+        }
+      </style>
+    </head>
+
+    <body>
       <h1>Nagymaros vízállás</h1>
       <h2>${value} cm</h2>
-    `);
+    </body>
+  </html>
+`);
 
   } catch (err) {
     console.error(err);
