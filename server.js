@@ -12,6 +12,19 @@ app.get('/', async (req, res) => {
 
     let value = 'N/A';
 
+    // 🔹 1. Fejléc kiolvasása
+    const headers = [];
+    $('tr').first().find('td, th').each((i, el) => {
+      headers.push($(el).text().trim());
+    });
+
+    // 🔹 2. Megkeressük a "ma reggel" oszlopot
+    // (ha pontosabb nevet látsz, pl. "Ma reggel vízállás", ez is működik)
+    const idx = headers.findIndex(h =>
+      h.toLowerCase().includes('reggel')
+    );
+
+    // 🔹 3. Sorok bejárása
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
@@ -19,7 +32,9 @@ app.get('/', async (req, res) => {
         const name = $(cells[1]).text().trim();
 
         if (name === 'Nagymaros') {
-          value = $(cells[2]).text().trim();
+          if (idx !== -1) {
+            value = $(cells[idx]).text().trim();
+          }
         }
       }
     });
@@ -30,6 +45,7 @@ app.get('/', async (req, res) => {
     `);
 
   } catch (err) {
+    console.error(err);
     res.send('Hiba a lekérésben');
   }
 });
