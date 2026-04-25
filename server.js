@@ -13,36 +13,55 @@ app.get('/', async (req, res) => {
     let value = 'N/A';
     let maReggelIndex = -1;
 
-    // 🔍 1. FEJLÉCBEN MEGKERESSÜK A "Ma reggel" OSZLOPOT
+    console.log('--- TÁBLÁZAT ELEMZÉS INDUL ---');
+
+    // 🔍 FEJLÉC KERESÉS
     $('tr').each((i, row) => {
       const headers = $(row).find('th, td');
 
       headers.each((j, el) => {
-        const text = $(el).text().trim().toLowerCase();
+        const text = $(el).text().trim().replace(/\s+/g, ' ');
 
-        if (text.replace(/\s+/g, ' ').includes('ma reggel')) {
+        if (text.toLowerCase().includes('ma reggel')) {
           maReggelIndex = j;
+          console.log('👉 Ma reggel oszlop index:', maReggelIndex);
         }
       });
     });
 
-    // 🔍 2. NAGYMAROS SOR KERESÉSE
+    // 🔍 SOROK KERESÉSE
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
         const name = $(cells[1]).text().trim();
 
-        if (name === 'Nagymaros' && maReggelIndex !== -1) {
-          value = $(cells[maReggelIndex]).text().trim();
+        if (name === 'Nagymaros') {
+
+          const values = [];
+
+          cells.each((i, el) => {
+            values.push($(el).text().trim());
+          });
+
+          console.log('👉 Nagymaros sor teljes:', values);
+
+          if (maReggelIndex !== -1) {
+            value = values[maReggelIndex];
+            console.log('👉 Kiválasztott Ma reggel érték:', value);
+          } else {
+            console.log('❌ Nincs Ma reggel oszlop találat!');
+          }
         }
       }
     });
 
     res.send(`Nagymaros (ma reggel): ${value} cm`);
 
-  } catch (error) {
-    console.error(error);
+    console.log('--- VÉGE ---');
+
+  } catch (err) {
+    console.error('HIBA:', err);
     res.send('Hiba történt');
   }
 });
