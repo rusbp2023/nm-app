@@ -13,9 +13,7 @@ app.get('/', async (req, res) => {
     let maReggelIndex = -1;
     let value = 'N/A';
 
-    console.log('--- START ---');
-
-    // 🔍 1. CSAK FEJLÉC SOR
+    // 🔍 1. MA REGGEL OSZLOP MEGTALÁLÁSA
     $('tr').first().find('th, td').each((i, el) => {
       const text = $(el).text().trim().replace(/\s+/g, ' ');
 
@@ -25,12 +23,12 @@ app.get('/', async (req, res) => {
       }
     });
 
-    // 🔍 2. NAGYMAROS SOR
+    // 🔍 2. NAGYMAROS SOR + OSZLOP KIVÉTELE
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
-        const name = $(cells[3]).text().trim();
+        const name = $(cells[1]).text().trim();
 
         if (name.includes('Nagymaros')) {
 
@@ -46,16 +44,12 @@ app.get('/', async (req, res) => {
       }
     });
 
-    console.log('👉 EREDMÉNY:', value);
-
     res.send(`Nagymaros (ma reggel): ${value} cm`);
-
-    console.log('--- END ---');
 
   } catch (err) {
     console.error(err);
-    res.send('Hiba');
+    res.send('Hiba történt');
   }
 });
 
-app.listen(3000);
+app.listen(3000, () => console.log('Server fut'));
