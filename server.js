@@ -20,7 +20,7 @@ app.get('/', async (req, res) => {
       headers.each((j, el) => {
         const text = $(el).text().trim().toLowerCase();
 
-        if (text.includes('ma reggel')) {
+        if (text.replace(/\s+/g, ' ').includes('ma reggel')) {
           maReggelIndex = j;
         }
       });
