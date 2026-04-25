@@ -11,74 +11,40 @@ app.get('/', async (req, res) => {
     const $ = cheerio.load(data);
 
     let value = 'N/A';
+    let maReggelIndex = -1;
 
+    // 🔍 1. FEJLÉCBEN MEGKERESSÜK A "Ma reggel" OSZLOPOT
+    $('tr').each((i, row) => {
+      const headers = $(row).find('th, td');
+
+      headers.each((j, el) => {
+        const text = $(el).text().trim().toLowerCase();
+
+        if (text.includes('ma reggel')) {
+          maReggelIndex = j;
+        }
+      });
+    });
+
+    // 🔍 2. NAGYMAROS SOR KERESÉSE
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
-
         const name = $(cells[1]).text().trim();
 
-        if (name === 'Nagymaros') {
-
-          // 🔥 ÖSSZES CELL KIOLVASÁSA (DEBUG + BIZTOS LOGIKA)
-          const values = [];
-
-          cells.each((i, el) => {
-            values.push($(el).text().trim());
-          });
-
-          console.log('Nagymaros sor:', values);
-
-          // 🔥 A VÍZÁLLÁS TÖBBNYIRE AZ 4. SZÁMOS OSZLOP
-          // (itt fogjuk belőni pontosan)
-          value = values[4]; // <-- EZ LESZ A 37 (vagy körülötte)
-
+        if (name === 'Nagymaros' && maReggelIndex !== -1) {
+          value = $(cells[maReggelIndex]).text().trim();
         }
       }
     });
 
- res.send(`
-  <html>
-    <head>
-      <title>Nagymaros vízállás</title>
-      <style>
-        body {
-          margin: 0;
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          font-family: Arial, sans-serif;
-          background: #f2f6ff;
-        }
+    res.send(`Nagymaros (ma reggel): ${value} cm`);
 
-        h1 {
-          font-size: 42px;
-          margin-bottom: 20px;
-        }
-
-        h2 {
-          font-size: 80px;
-          margin: 0;
-          color: #0066cc;
-        }
-      </style>
-    </head>
-
-    <body>
-      <h1>Nagymaros vízállás</h1>
-      <h2>${value} cm</h2>
-    </body>
-  </html>
-`);
-
-  } catch (err) {
-    console.error(err);
-    res.send('Hiba');
+  } catch (error) {
+    console.error(error);
+    res.send('Hiba történt');
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Server fut'));
+app.listen(3000, () => console.log('Server fut a 3000-es porton'));
