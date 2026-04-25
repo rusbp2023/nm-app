@@ -10,20 +10,8 @@ app.get('/', async (req, res) => {
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
 
-    let maReggelIndex = -1;
     let value = 'N/A';
 
-    // 🔍 1. MA REGGEL OSZLOP MEGTALÁLÁSA
-    $('tr').first().find('th, td').each((i, el) => {
-      const text = $(el).text().trim().replace(/\s+/g, ' ');
-
-      if (text === 'Ma reggel') {
-        maReggelIndex = i;
-        console.log('👉 Ma reggel index:', maReggelIndex);
-      }
-    });
-
-    // 🔍 2. NAGYMAROS SOR + OSZLOP KIVÉTELE
     $('tr').each((i, row) => {
       const cells = $(row).find('td');
 
@@ -32,19 +20,16 @@ app.get('/', async (req, res) => {
 
         if (name.includes('Nagymaros')) {
 
-          const values = [];
-          cells.each((i, el) => values.push($(el).text().trim()));
+          // 👉 2. cella (index 1) = amit kérsz
+          value = $(cells[1]).text().trim();
 
-          console.log('👉 Nagymaros sor:', values);
-
-          if (maReggelIndex !== -1) {
-            value = values[maReggelIndex];
-          }
+          console.log('👉 Nagymaros sor megtalálva');
+          console.log('👉 2. cella érték:', value);
         }
       }
     });
 
-    res.send(`Nagymaros (ma reggel): ${value} cm`);
+    res.send(`Nagymaros (2. cella): ${value}`);
 
   } catch (err) {
     console.error(err);
