@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
-        const name = $(cells[1]).text().trim();
+        const name = $(cells[3]).text().trim();
 
         if (name.includes('Nagymaros')) {
 
