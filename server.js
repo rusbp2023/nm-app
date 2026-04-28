@@ -6,7 +6,7 @@ const app = express();
 
 app.get('/', async (req, res) => {
   try {
-    const url = 'https://hydroinfo.hu/tables/dunhid.html';
+    const url = 'https://hydroinfo.hu/tables/dunelotH.html';
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
 
@@ -16,20 +16,20 @@ app.get('/', async (req, res) => {
       const cells = $(row).find('td');
 
       if (cells.length > 0) {
-        const name = $(cells[1]).text().trim();
+        const name = $(cells[0]).text().trim(); // ⚠️ itt lehet 0!
 
         if (name.includes('Nagymaros')) {
 
-          // 👉 2. cella (index 1) = amit kérsz
+          // 👉 "Ma reggel" oszlop
           value = $(cells[3]).text().trim();
 
           console.log('👉 Nagymaros sor megtalálva');
-          console.log('👉 2. cella érték:', value);
+          console.log('👉 Ma reggel érték:', value);
         }
       }
     });
 
-    res.send(`Nagymaros (2. cella): ${value}`);
+    res.send(`Nagymaros (Ma reggel): ${value}`);
 
   } catch (err) {
     console.error(err);
