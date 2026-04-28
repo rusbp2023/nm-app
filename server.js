@@ -21,7 +21,7 @@ app.get('/', async (req, res) => {
         if (name.includes('Nagymaros')) {
 
           // 👉 "Ma reggel" oszlop
-          value = $(cells[8]).text().trim();
+          value = $(cells[9]).text().trim();
 
           console.log('👉 Nagymaros sor megtalálva');
           console.log('👉 Ma reggel érték:', value);
