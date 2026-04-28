@@ -63,7 +63,7 @@ app.get('/', async (req, res) => {
     <body>
       <div class="box">
         <div class="label">Nagymaros (Ma reggel)</div>
-        <div>${value}</div>
+        <div>${value} cm</div>
       </div>
     </body>
   </html>
